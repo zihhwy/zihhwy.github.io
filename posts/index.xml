@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on 我的博客</title>
-    <link>https://zihhwy.github.io/posts/</link>
+    <link>https://codepllz.com//posts/</link>
     <description>Recent content in Posts on 我的博客</description>
     <generator>Hugo -- 0.152.2</generator>
     <language>zh-cn</language>
     <lastBuildDate>Tue, 02 Dec 2025 10:41:59 +0800</lastBuildDate>
-    <atom:link href="https://zihhwy.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://codepllz.com//posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Markdown 语法指南</title>
-      <link>https://zihhwy.github.io/posts/001/</link>
+      <link>https://codepllz.com//posts/001/</link>
       <pubDate>Tue, 02 Dec 2025 10:41:59 +0800</pubDate>
-      <guid>https://zihhwy.github.io/posts/001/</guid>
+      <guid>https://codepllz.com//posts/001/</guid>
       <description>&lt;p&gt;  Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。本文旨在提供一份详尽的语法参考，助你快速掌握 Markdown。&lt;/p&gt;</description>
     </item>
     <item>
       <title>如何把谷歌网盘当作s3存储桶用作各种网站</title>
-      <link>https://zihhwy.github.io/posts/002/</link>
+      <link>https://codepllz.com//posts/002/</link>
       <pubDate>Tue, 02 Dec 2025 10:41:59 +0800</pubDate>
-      <guid>https://zihhwy.github.io/posts/002/</guid>
+      <guid>https://codepllz.com//posts/002/</guid>
       <description>&lt;p&gt;  如何备份存储一直是痛点，网盘可以完美解决这个问题，而且不用多花钱买存储vps，之前发过一次，但是当时的配置只能支持路径式的s3存储，大多数网站的s3存储都是主机式网址的s3存储的，为了优化这一点，重新调整了所有设置。前提，你有一台服务器，一个Google drive 2T白嫖账号。在服务器上搭建了rclone服务，并且挂载了google drive&lt;/p&gt;</description>
     </item>
   </channel>
