@@ -9,10 +9,10 @@
     <lastBuildDate>Tue, 02 Dec 2025 10:41:59 +0800</lastBuildDate>
     <atom:link href="https://zihhwy.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Hello World</title>
-      <link>https://zihhwy.github.io/posts/hello-world/</link>
+      <title>Markdown 语法指南</title>
+      <link>https://zihhwy.github.io/posts/001/</link>
       <pubDate>Tue, 02 Dec 2025 10:41:59 +0800</pubDate>
-      <guid>https://zihhwy.github.io/posts/hello-world/</guid>
+      <guid>https://zihhwy.github.io/posts/001/</guid>
       <description>&lt;p&gt;  Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。本文旨在提供一份详尽的语法参考，助你快速掌握 Markdown。&lt;/p&gt;</description>
     </item>
   </channel>
