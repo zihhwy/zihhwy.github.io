@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://zihhwy.github.io/sitemap.xml
