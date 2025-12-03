@@ -10,7 +10,7 @@
 <meta name="description" content="Posts - 小学生">
 <meta name="author" content="Me">
 <link rel="canonical" href="https://codepllz.com/posts/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.d408aff0b90498be7a5ace64b1213f530382b1f732795c0b433b1d5e28ef7e76.css" integrity="sha256-1Aiv8LkEmL56Ws5ksSE/UwOCsfcyeVwLQzsdXijvfnY=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.0a66e2f7f6c74587a71904c1269928ad1518035d134722981f19d0be1047423e.css" integrity="sha256-Cmbi9/bHRYenGQTBJpkorRUYA10TRyKYHxnQvhBHQj4=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://codepllz.com/favicon.png">
 <link rel="icon" type="image/png" sizes="16x16" href="https://codepllz.com/favicon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://codepllz.com/favicon.png">
@@ -67,7 +67,7 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script><meta name="referrer" content="no-referrer"><meta property="og:url" content="https://codepllz.com/posts/">
+</script><meta property="og:url" content="https://codepllz.com/posts/">
   <meta property="og:site_name" content="小学生">
   <meta property="og:title" content="Posts">
   <meta property="og:description" content="这是我的个人博客">
@@ -134,25 +134,17 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
-    <h2 class="entry-hint-parent">在cloudflare创建一个cname记录，将aaa.example.com解析到tool.example.com上，并开启cf cdn
+    <h2 class="entry-hint-parent">利用cloudflare的Origin Rules搭配frp实现家宽无80/443端口访问
     </h2>
   </header>
   <div class="entry-content">
     <p>序言 起初无意间发现cloudflare的origin rules规则，可以进行端口反向代理，将对应端口上的页面代理到正常的80、443上，直接访问。于是开始琢磨起它的使用方法
 这个功能的应用场景非常广泛，大致有以下几点，
 家宽，运营商拦截了80、443端口的，可以绕过限制建站。 没有公网ipv4但有ipv6的家宽，可以实现1的同时将ipv6单栈解析转为ipv4、ipv6双栈的。 让限制了端口数量的nat小鸡建站 让纯ipv6小鸡也可以建站 1. 有公网ipv4/6 有公网ip就相对简单很多，首先需要准备以下三项
-ddns工具 通过ddns将域名A tool.example解析到家宽ip上 将域名A(tool.example)cname到域名B(xxx.example)上 * 域名A为工具域名，域名B为需要访问的域名
-ddns工具安装教程网上非常多，默认已经安装
-1.1 首先将域名解析到ddns上 1.2 在cloudflare创建一个cname记录，将xxx.example.com解析到tool.example.com上，并开启cf cdn 1.3 创建一个Origin rules，将域名xxx.example.com重写到1234端口 * 这里的1234就是你所需要访问的端口，因为web服务80/443端口压根通信不出去，所以需要你在Nginx或类似工具上修改默认的80/443为1234
-完成 访问你的xxx.example.com就能打开你的网站了
-2. 无公网ip 既然没有公网ip那就只能使用frp/nps转发工具了
-2.1 安装frp 您可以从 GitHub 的 Release 页面中下载最新版本的客户端和服务器二进制文件。所有文件都打包在一个压缩包中，还包含了一份完整的配置参数说明。
-解压下载的压缩包。 将frpc复制到内网服务所在的机器上。 将frps复制到拥有公网 IP 地址的机器上，并将它们放在任意目录。 配置frps.toml并运行frps服务
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 # FRP 服务端监听端口 bindPort = 7000 # HTTP 和 HTTPS 虚拟主机端口 vhostHTTPPort = 8090 # HTTP 服务端口 vhostHTTPSPort = 8443 # HTTPS 服务端口（可选） # FRP 服务端 Web 管理界面配置 [webServer] addr = &#34;0.0.0.0&#34; # 监听地址（0.0.0.0 表示允许所有 IP 访问） port = 7001 # Web 管理界面端口 user = &#34;xxx&#34; # 登录用户名 password = &#34;xxxxxx&#34; # 登录密码 # FRP 客户端连接鉴权配置 [auth] token = &#34;xxxxxxxx&#34; # 客户端连接所需的鉴权 token # 日志配置 [log] to = &#34;./log&#34; # 日志文件保存路径 level = &#34;info&#34; # 日志级别（可选：trace, debug, info, warn, error） maxDays = 7 # 日志保留天数 * xxxxx为需要自定义修改的部分
-...</p>
+ddns工具 通过ddns将域名A tool.example解析到家宽ip上 将域名A(tool.example)cname到域名B(xxx.example)上 * 域名A为工具域名，域名B为需要访问的域名 ddns工具教程网上非常多，默认已经解析到域名A </p>
   </div>
-  <footer class="entry-footer"><span title='2025-12-03 17:04:58 +0800 CST'>2025年12月3日</span>&nbsp;·&nbsp;<span>2 分钟</span>&nbsp;·&nbsp;<span>218 字</span>&nbsp;·&nbsp;<span>Me</span></footer>
-  <a class="entry-link" aria-label="post link to 在cloudflare创建一个cname记录，将aaa.example.com解析到tool.example.com上，并开启cf cdn" href="https://codepllz.com/posts/003/"></a>
+  <footer class="entry-footer"><span title='2025-12-03 17:04:58 +0800 CST'>2025年12月3日</span>&nbsp;·&nbsp;<span>1 分钟</span>&nbsp;·&nbsp;<span>18 字</span>&nbsp;·&nbsp;<span>Me</span></footer>
+  <a class="entry-link" aria-label="post link to 利用cloudflare的Origin Rules搭配frp实现家宽无80/443端口访问" href="https://codepllz.com/posts/003/"></a>
 </article>
 
 <article class="post-entry"> 

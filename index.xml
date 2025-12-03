@@ -9,7 +9,7 @@
     <lastBuildDate>Wed, 03 Dec 2025 17:04:58 +0800</lastBuildDate>
     <atom:link href="https://codepllz.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>在cloudflare创建一个cname记录，将aaa.example.com解析到tool.example.com上，并开启cf cdn</title>
+      <title>利用cloudflare的Origin Rules搭配frp实现家宽无80/443端口访问</title>
       <link>https://codepllz.com/posts/003/</link>
       <pubDate>Wed, 03 Dec 2025 17:04:58 +0800</pubDate>
       <guid>https://codepllz.com/posts/003/</guid>
@@ -29,87 +29,9 @@
 &lt;li&gt;通过ddns将域名A tool.example解析到家宽ip上&lt;/li&gt;
 &lt;li&gt;将域名A(tool.example)cname到域名B(xxx.example)上&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;* &lt;em&gt;域名A为工具域名，域名B为需要访问的域名&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;ddns工具安装教程网上非常多，默认已经安装&lt;/p&gt;
-&lt;h3 id=&#34;11-首先将域名解析到ddns上&#34;&gt;1.1 首先将域名解析到ddns上&lt;/h3&gt;
-&lt;p&gt;&lt;img alt=&#34;image&#34; loading=&#34;lazy&#34; src=&#34;https://image.codepllz.com/uploads/2025/12/Qay7hVvTDEXB.webp&#34;&gt;&lt;/p&gt;
-&lt;h3 id=&#34;12-在cloudflare创建一个cname记录将xxxexamplecom解析到toolexamplecom上并开启cf-cdn&#34;&gt;1.2 在cloudflare创建一个cname记录，将xxx.example.com解析到tool.example.com上，并开启cf cdn&lt;/h3&gt;
-&lt;p&gt;&lt;img alt=&#34;image&#34; loading=&#34;lazy&#34; src=&#34;https://image.codepllz.com/uploads/2025/12/bNhqzLds6o_d.webp&#34;&gt;&lt;/p&gt;
-&lt;h3 id=&#34;13-创建一个origin-rules将域名xxxexamplecom重写到1234端口&#34;&gt;1.3 创建一个Origin rules，将域名xxx.example.com重写到1234端口&lt;/h3&gt;
-&lt;p&gt;* &lt;em&gt;这里的1234就是你所需要访问的端口，因为web服务80/443端口压根通信不出去，所以需要你在Nginx或类似工具上修改默认的80/443为1234&lt;/em&gt;&lt;br&gt;
-&lt;img alt=&#34;image&#34; loading=&#34;lazy&#34; src=&#34;https://image.codepllz.com/uploads/2025/12/nTVesIBumHkr.webp&#34;&gt;&lt;br&gt;
-&lt;img alt=&#34;image&#34; loading=&#34;lazy&#34; src=&#34;https://image.codepllz.com/uploads/2025/12/0G-a4nq0bM1b.webp&#34;&gt;&lt;/p&gt;
-&lt;h3 id=&#34;完成&#34;&gt;完成&lt;/h3&gt;
-&lt;p&gt;访问你的xxx.example.com就能打开你的网站了&lt;/p&gt;
-&lt;h2 id=&#34;2-无公网ip&#34;&gt;2. 无公网ip&lt;/h2&gt;
-&lt;p&gt;既然没有公网ip那就只能使用frp/nps转发工具了&lt;/p&gt;
-&lt;h3 id=&#34;21-安装frp&#34;&gt;2.1 安装frp&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;您可以从 GitHub 的 &lt;a href=&#34;https://github.com/fatedier/frp/releases&#34;&gt;Release&lt;/a&gt; 页面中下载最新版本的客户端和服务器二进制文件。所有文件都打包在一个压缩包中，还包含了一份完整的配置参数说明。&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;解压下载的压缩包。&lt;/li&gt;
-&lt;li&gt;将frpc复制到内网服务所在的机器上。&lt;/li&gt;
-&lt;li&gt;将frps复制到拥有公网 IP 地址的机器上，并将它们放在任意目录。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;配置frps.toml并运行frps服务&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-css&#34; data-lang=&#34;css&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;FRP&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;服务端监听端口&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;bindPort&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;7000&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;HTTP&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;和&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;HTTPS&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;虚拟主机端口&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;vhostHTTPPort&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;8090&lt;/span&gt;   &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;HTTP&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;服务端口&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;vhostHTTPSPort&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;8443&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;HTTPS&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;服务端口&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;（&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;可选&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;）&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;FRP&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;服务端&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;Web&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;管理界面配置&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;webServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;addr&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;0.0.0.0&amp;#34;&lt;/span&gt;  &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;监听地址&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;（&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nc&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nc&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nc&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;表示允许所有&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;IP&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;访问&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;）&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;port&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;7001&lt;/span&gt;       &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;Web&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;管理界面端口&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;user&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;xxx&amp;#34;&lt;/span&gt;    &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;登录用户名&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;password&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;xxxxxx&amp;#34;&lt;/span&gt;  &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;登录密码&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;FRP&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;客户端连接鉴权配置&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;auth&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;token&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;xxxxxxxx&amp;#34;&lt;/span&gt;  &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;客户端连接所需的鉴权&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;token&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;日志配置&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;to&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;./log&amp;#34;&lt;/span&gt;     &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;日志文件保存路径&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;level&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;info&amp;#34;&lt;/span&gt;   &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;日志级别&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;（&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;可选&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;：&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;trace&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;debug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;warn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;）&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;maxDays&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;7&lt;/span&gt;      &lt;span class=&#34;err&#34;&gt;#&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;日志保留天数&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;* &lt;em&gt;xxxxx为需要自定义修改的部分&lt;/em&gt;&lt;/p&gt;</description>
+&lt;p&gt;* &lt;em&gt;域名A为工具域名，域名B为需要访问的域名&lt;/em&gt;
+ddns工具教程网上非常多，默认已经解析到域名A
+&lt;img alt=&#34;image&#34; loading=&#34;lazy&#34; src=&#34;https://image.codepllz.com/uploads/2025/12/Qay7hVvTDEXB.webp&#34;&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>Markdown 语法指南</title>
