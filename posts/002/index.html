@@ -110,8 +110,8 @@
   "keywords": [
     
   ],
-  "articleBody": " 如何备份存储一直是痛点，网盘可以完美解决这个问题，而且不用多花钱买存储vps，之前发过一次，但是当时的配置只能支持路径式的s3存储，大多数网站的s3存储都是主机式网址的s3存储的，为了优化这一点，重新调整了所有设置。前提，你有一台服务器，一个Google drive 2T白嫖账号。在服务器上搭建了rclone服务，并且挂载了google drive\n一、设置rclone系统服务 sudo nano /etc/systemd/system/rclone-s3.service [Unit] Description=Rclone S3 Service for Google Drive After=network.target [Service] Type=simple User=root ExecStart=/usr/bin/rclone serve s3 \\ --addr 0.0.0.0:10000 \\ --auth-key yourAccess key ID,yourSecret Key \\ --etag-hash md5 \\ --force-path-style=false \\ googledrive: Restart=on-failure RestartSec=10 [Install] WantedBy=multi-user.target 主要变量含义 Type=simple: 服务类型为简单类型，进程在前台运行 User=root: 以 root 用户身份运行服务 ExecStart: 服务启动时执行的命令，包含以下 Rclone 参数： /usr/bin/rclone serve s3 googledrive:s3: 使用 Rclone 将 Google Drive 作为 S3 服务提供 googledrive: 这是在 Rclone 配置文件中定义的远程存储配置名称，s3是 Google Drive 中的一个文件夹路径 addr 0.0.0.0:10000: 监听所有网络接口的 10000 端口 auth-key: S3 认证密钥对（Access Key 和 Secret Key） etag-hash md5: 使用 MD5 作为 ETag 哈希算法 Restart=on-failure: 服务失败时自动重启 RestartSec=10: 重启前等待 10 秒 保存，启动服务，查看服务状态\nsudo systemctl daemon-reload sudo systemctl restart rclone-s3 sudo systemctl status rclone-s3 二、优化反向代理设置 你要设置DNS服务器（cf），1panel反向代理，\ns3.888888.xyz 和\n*.s3.888888.xyz 全部指向你的服务器IP，并且申请函盖着两个域名的证书， 以1panel为例 修改 /opt/1panel/apps/openresty/openresty/www/sites/s3.888888.xyz/proxy/root.conf\nlocation / { # 直接反代到 rclone S3 网关 proxy_pass http://localhost:10000; proxy_http_version 1.1; # 保留原始 Host 头，保证 S3 签名一致 proxy_set_header Host $host; proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; proxy_set_header X-Forwarded-Proto $scheme; # 上传大文件直传 proxy_request_buffering off; proxy_buffering off; client_max_body_size 500M; } 三、S3存储桶主要参数 第一步设置存储桶，已经顺利完成。但是仅支持路径式的地址存储桶！ 主要参数：\nAccess key ID：配置文件中第一个yourAccess key ID Secret Key：配置文件中第二个yourSecret Key Region：随便，比如us-east-1 Endpoint：你的反向代理的指向你的服务器的域名比如 https://s3.xxxx.com Bucket:你设置的谷歌网盘下面的文件夹，每一个文件夹就是一个存储桶 ",
-  "wordCount" : "172",
+  "articleBody": " 如何备份存储一直是痛点，网盘可以完美解决这个问题，而且不用多花钱买存储vps，之前发过一次，但是当时的配置只能支持路径式的s3存储，大多数网站的s3存储都是主机式网址的s3存储的，为了优化这一点，重新调整了所有设置。前提，你有一台服务器，一个Google drive 2T白嫖账号。在服务器上搭建了rclone服务，并且挂载了google drive\n一、设置rclone系统服务 1 sudo nano /etc/systemd/system/rclone-s3.service 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 [Unit] Description=Rclone S3 Service for Google Drive After=network.target [Service] Type=simple User=root ExecStart=/usr/bin/rclone serve s3 \\ --addr 0.0.0.0:10000 \\ --auth-key yourAccess key ID,yourSecret Key \\ --etag-hash md5 \\ --force-path-style=false \\ googledrive: Restart=on-failure RestartSec=10 [Install] WantedBy=multi-user.target 主要变量含义 Type=simple: 服务类型为简单类型，进程在前台运行 User=root: 以 root 用户身份运行服务 ExecStart: 服务启动时执行的命令，包含以下 Rclone 参数： /usr/bin/rclone serve s3 googledrive:s3: 使用 Rclone 将 Google Drive 作为 S3 服务提供 googledrive: 这是在 Rclone 配置文件中定义的远程存储配置名称，s3是 Google Drive 中的一个文件夹路径 addr 0.0.0.0:10000: 监听所有网络接口的 10000 端口 auth-key: S3 认证密钥对（Access Key 和 Secret Key） etag-hash md5: 使用 MD5 作为 ETag 哈希算法 Restart=on-failure: 服务失败时自动重启 RestartSec=10: 重启前等待 10 秒 保存，启动服务，查看服务状态\n1 2 3 sudo systemctl daemon-reload sudo systemctl restart rclone-s3 sudo systemctl status rclone-s3 二、优化反向代理设置 你要设置DNS服务器（cf），1panel反向代理，\n1 s3.888888.xyz 和\n*.s3.888888.xyz 全部指向你的服务器IP，并且申请函盖着两个域名的证书， 以1panel为例 修改 /opt/1panel/apps/openresty/openresty/www/sites/s3.888888.xyz/proxy/root.conf\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 location / { # 直接反代到 rclone S3 网关 proxy_pass http://localhost:10000; proxy_http_version 1.1; # 保留原始 Host 头，保证 S3 签名一致 proxy_set_header Host $host; proxy_set_header X-Real-IP $remote_addr; proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; proxy_set_header X-Forwarded-Proto $scheme; # 上传大文件直传 proxy_request_buffering off; proxy_buffering off; client_max_body_size 500M; } 三、S3存储桶主要参数 第一步设置存储桶，已经顺利完成。但是仅支持路径式的地址存储桶！ 主要参数：\nAccess key ID：配置文件中第一个yourAccess key ID Secret Key：配置文件中第二个yourSecret Key Region：随便，比如us-east-1 Endpoint：你的反向代理的指向你的服务器的域名比如 https://s3.xxxx.com Bucket:你设置的谷歌网盘下面的文件夹，每一个文件夹就是一个存储桶 ",
+  "wordCount" : "211",
   "inLanguage": "zh",
   "datePublished": "2025-12-02T10:41:59+08:00",
   "dateModified": "2025-12-02T10:41:59+08:00",
@@ -174,7 +174,7 @@
     <h1 class="post-title entry-hint-parent">
       如何把谷歌网盘当作s3存储桶用作各种网站
     </h1>
-    <div class="post-meta"><span title='2025-12-02 10:41:59 +0800 CST'>2025年12月2日</span>&nbsp;·&nbsp;<span>1 分钟</span>&nbsp;·&nbsp;<span>172 字</span>&nbsp;·&nbsp;<span>Me</span>
+    <div class="post-meta"><span title='2025-12-02 10:41:59 +0800 CST'>2025年12月2日</span>&nbsp;·&nbsp;<span>1 分钟</span>&nbsp;·&nbsp;<span>211 字</span>&nbsp;·&nbsp;<span>Me</span>
 
 </div>
   </header> <div class="toc">
@@ -200,8 +200,37 @@
 
   <div class="post-content"><p>  如何备份存储一直是痛点，网盘可以完美解决这个问题，而且不用多花钱买存储vps，之前发过一次，但是当时的配置只能支持路径式的s3存储，大多数网站的s3存储都是主机式网址的s3存储的，为了优化这一点，重新调整了所有设置。前提，你有一台服务器，一个Google drive 2T白嫖账号。在服务器上搭建了rclone服务，并且挂载了google drive</p>
 <h2 id="一设置rclone系统服务">一、设置rclone系统服务<a hidden class="anchor" aria-hidden="true" href="#一设置rclone系统服务">#</a></h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">sudo</span> <span class="nt">nano</span> <span class="o">/</span><span class="nt">etc</span><span class="o">/</span><span class="nt">systemd</span><span class="o">/</span><span class="nt">system</span><span class="o">/</span><span class="nt">rclone-s3</span><span class="p">.</span><span class="nc">service</span>
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="o">[</span><span class="nt">Unit</span><span class="o">]</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">sudo</span> <span class="nt">nano</span> <span class="o">/</span><span class="nt">etc</span><span class="o">/</span><span class="nt">systemd</span><span class="o">/</span><span class="nt">system</span><span class="o">/</span><span class="nt">rclone-s3</span><span class="p">.</span><span class="nc">service</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="o">[</span><span class="nt">Unit</span><span class="o">]</span>
 </span></span><span class="line"><span class="cl"><span class="nt">Description</span><span class="o">=</span><span class="nt">Rclone</span> <span class="nt">S3</span> <span class="nt">Service</span> <span class="nt">for</span> <span class="nt">Google</span> <span class="nt">Drive</span>
 </span></span><span class="line"><span class="cl"><span class="nt">After</span><span class="o">=</span><span class="nt">network</span><span class="p">.</span><span class="nc">target</span>
 </span></span><span class="line"><span class="cl">
@@ -219,7 +248,9 @@
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="o">[</span><span class="nt">Install</span><span class="o">]</span>
 </span></span><span class="line"><span class="cl"><span class="nt">WantedBy</span><span class="o">=</span><span class="nt">multi-user</span><span class="p">.</span><span class="nc">target</span>
-</span></span></code></pre></div><h3 id="主要变量含义">主要变量含义<a hidden class="anchor" aria-hidden="true" href="#主要变量含义">#</a></h3>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="主要变量含义">主要变量含义<a hidden class="anchor" aria-hidden="true" href="#主要变量含义">#</a></h3>
 <ul>
 <li>Type=simple: 服务类型为简单类型，进程在前台运行</li>
 <li>User=root: 以 root 用户身份运行服务</li>
@@ -234,18 +265,54 @@ S3 服务提供</li>
 <li>RestartSec=10: 重启前等待 10 秒</li>
 </ul>
 <p>保存，启动服务，查看服务状态</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">sudo</span> <span class="nt">systemctl</span> <span class="nt">daemon-reload</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">sudo</span> <span class="nt">systemctl</span> <span class="nt">daemon-reload</span>
 </span></span><span class="line"><span class="cl"><span class="nt">sudo</span> <span class="nt">systemctl</span> <span class="nt">restart</span> <span class="nt">rclone-s3</span>
 </span></span><span class="line"><span class="cl"><span class="nt">sudo</span> <span class="nt">systemctl</span> <span class="nt">status</span> <span class="nt">rclone-s3</span>
-</span></span></code></pre></div><h2 id="二优化反向代理设置">二、优化反向代理设置<a hidden class="anchor" aria-hidden="true" href="#二优化反向代理设置">#</a></h2>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="二优化反向代理设置">二、优化反向代理设置<a hidden class="anchor" aria-hidden="true" href="#二优化反向代理设置">#</a></h2>
 <p>你要设置DNS服务器（cf），1panel反向代理，</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">s3</span><span class="p">.</span><span class="nc">888888</span><span class="p">.</span><span class="nc">xyz</span>
-</span></span></code></pre></div><p>和</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">s3</span><span class="p">.</span><span class="nc">888888</span><span class="p">.</span><span class="nc">xyz</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>和</p>
 <pre tabindex="0"><code>*.s3.888888.xyz
 </code></pre><p>全部指向你的服务器IP，并且申请函盖着两个域名的证书，
 以1panel为例
 修改 /opt/1panel/apps/openresty/openresty/www/sites/s3.888888.xyz/proxy/root.conf</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">location</span> <span class="o">/</span> <span class="p">{</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">location</span> <span class="o">/</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="err">#</span> <span class="err">直接反代到</span> <span class="err">rclone</span> <span class="err">S3</span> <span class="err">网关</span>
 </span></span><span class="line"><span class="cl">    <span class="err">proxy_pass</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="o">:</span><span class="mi">10000</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="err">proxy_http_version</span> <span class="err">1.1</span><span class="p">;</span>
@@ -261,7 +328,9 @@ S3 服务提供</li>
 </span></span><span class="line"><span class="cl">    <span class="err">proxy_buffering</span>         <span class="err">off</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="err">client_max_body_size</span>    <span class="err">500M</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><h2 id="三s3存储桶主要参数">三、S3存储桶主要参数<a hidden class="anchor" aria-hidden="true" href="#三s3存储桶主要参数">#</a></h2>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="三s3存储桶主要参数">三、S3存储桶主要参数<a hidden class="anchor" aria-hidden="true" href="#三s3存储桶主要参数">#</a></h2>
 <p>第一步设置存储桶，已经顺利完成。但是仅支持路径式的地址存储桶！
 主要参数：</p>
 <ul>
@@ -385,23 +454,69 @@ S3 服务提供</li>
 
 <script>
     function runtime() {
-        const startTime = new Date("11/30/2025 00:00:00");
+        
+        const startTime = new Date("11/30/2024 00:00:00");
         const now = new Date();
-        const difference = now.getTime() - startTime.getTime();
-        const days = Math.floor(difference / (24 * 3600 * 1000));
-        const leave1 = difference % (24 * 3600 * 1000);
-        const hours = Math.floor(leave1 / (3600 * 1000));
-        const minutes = Math.floor((leave1 % (3600 * 1000)) / (60 * 1000));
-        const seconds = Math.floor((leave1 % (60 * 1000)) / 1000);
+
+        
+        let years = now.getFullYear() - startTime.getFullYear();
+        let months = now.getMonth() - startTime.getMonth();
+        let days = now.getDate() - startTime.getDate();
+        let hours = now.getHours() - startTime.getHours();
+        let minutes = now.getMinutes() - startTime.getMinutes();
+        let seconds = now.getSeconds() - startTime.getSeconds();
+
+        
+        if (seconds < 0) {
+            seconds += 60;
+            minutes--;
+        }
+        if (minutes < 0) {
+            minutes += 60;
+            hours--;
+        }
+        if (hours < 0) {
+            hours += 24;
+            days--;
+        }
+        
+        
+        if (days < 0) {
+            
+            const prevMonthLastDay = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+            days += prevMonthLastDay;
+            months--;
+        }
+
+        
+        if (months < 0) {
+            months += 12;
+            years--;
+        }
+
+        
+        let runTimeStr = "本站已运行 ";
+        
+        if (years > 0) {
+            runTimeStr += `${years}年 `;
+        }
+        
+        
+        if (years > 0 || months > 0) {
+            runTimeStr += `${months}月 `;
+        }
+        
+        runTimeStr += `${days}天 ${hours}小时 ${minutes}分 ${seconds}秒`;
+
         
         const runTimeSpan = document.getElementById("run_time");
         if (runTimeSpan) {
-            runTimeSpan.innerHTML = `本站已运行 ${days}天 ${hours}小时 ${minutes}分 ${seconds}秒`;
+            runTimeSpan.innerHTML = runTimeStr;
         }
     }
+
     runtime();
     setInterval(runtime, 1000);
-</script>
-</body>
+</script></body>
 
 </html>

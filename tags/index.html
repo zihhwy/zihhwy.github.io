@@ -132,23 +132,69 @@
 
 <script>
     function runtime() {
-        const startTime = new Date("11/30/2025 00:00:00");
+        
+        const startTime = new Date("11/30/2024 00:00:00");
         const now = new Date();
-        const difference = now.getTime() - startTime.getTime();
-        const days = Math.floor(difference / (24 * 3600 * 1000));
-        const leave1 = difference % (24 * 3600 * 1000);
-        const hours = Math.floor(leave1 / (3600 * 1000));
-        const minutes = Math.floor((leave1 % (3600 * 1000)) / (60 * 1000));
-        const seconds = Math.floor((leave1 % (60 * 1000)) / 1000);
+
+        
+        let years = now.getFullYear() - startTime.getFullYear();
+        let months = now.getMonth() - startTime.getMonth();
+        let days = now.getDate() - startTime.getDate();
+        let hours = now.getHours() - startTime.getHours();
+        let minutes = now.getMinutes() - startTime.getMinutes();
+        let seconds = now.getSeconds() - startTime.getSeconds();
+
+        
+        if (seconds < 0) {
+            seconds += 60;
+            minutes--;
+        }
+        if (minutes < 0) {
+            minutes += 60;
+            hours--;
+        }
+        if (hours < 0) {
+            hours += 24;
+            days--;
+        }
+        
+        
+        if (days < 0) {
+            
+            const prevMonthLastDay = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+            days += prevMonthLastDay;
+            months--;
+        }
+
+        
+        if (months < 0) {
+            months += 12;
+            years--;
+        }
+
+        
+        let runTimeStr = "本站已运行 ";
+        
+        if (years > 0) {
+            runTimeStr += `${years}年 `;
+        }
+        
+        
+        if (years > 0 || months > 0) {
+            runTimeStr += `${months}月 `;
+        }
+        
+        runTimeStr += `${days}天 ${hours}小时 ${minutes}分 ${seconds}秒`;
+
         
         const runTimeSpan = document.getElementById("run_time");
         if (runTimeSpan) {
-            runTimeSpan.innerHTML = `本站已运行 ${days}天 ${hours}小时 ${minutes}分 ${seconds}秒`;
+            runTimeSpan.innerHTML = runTimeStr;
         }
     }
+
     runtime();
     setInterval(runtime, 1000);
-</script>
-</body>
+</script></body>
 
 </html>

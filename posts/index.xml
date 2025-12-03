@@ -6,8 +6,33 @@
     <description>Recent content in Posts on 小学生</description>
     <generator>Hugo -- 0.152.2</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 02 Dec 2025 10:41:59 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 03 Dec 2025 17:04:58 +0800</lastBuildDate>
     <atom:link href="https://codepllz.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>利用cloudflare的Origin Rules搭配frp实现家宽无80/443端口访问</title>
+      <link>https://codepllz.com/posts/003/</link>
+      <pubDate>Wed, 03 Dec 2025 17:04:58 +0800</pubDate>
+      <guid>https://codepllz.com/posts/003/</guid>
+      <description>&lt;h2 id=&#34;序言&#34;&gt;序言&lt;/h2&gt;
+&lt;p&gt;  起初无意间发现cloudflare的origin rules规则，可以进行端口反向代理，将对应端口上的页面代理到正常的80、443上，直接访问。于是开始琢磨起它的使用方法&lt;/p&gt;
+&lt;p&gt;这个功能的应用场景非常广泛，大致有以下几点，&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;家宽，运营商拦截了80、443端口的，可以绕过限制建站。&lt;/li&gt;
+&lt;li&gt;没有公网ipv4但有ipv6的家宽，可以实现1的同时将ipv6单栈解析转为ipv4、ipv6双栈的。&lt;/li&gt;
+&lt;li&gt;让限制了端口数量的nat小鸡建站&lt;/li&gt;
+&lt;li&gt;让纯ipv6小鸡也可以建站&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;1-有公网ipv46&#34;&gt;1. 有公网ipv4/6&lt;/h2&gt;
+&lt;p&gt;有公网ip就相对简单很多，首先需要准备以下三项&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ddns工具&lt;/li&gt;
+&lt;li&gt;通过ddns将域名A tool.example解析到家宽ip上&lt;/li&gt;
+&lt;li&gt;将域名A(tool.example)cname到域名B(xxx.example)上&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;* &lt;em&gt;域名A为工具域名，域名B为需要访问的域名&lt;/em&gt;
+ddns工具教程网上非常多，默认已经解析到域名A
+&lt;img alt=&#34;image&#34; loading=&#34;lazy&#34; src=&#34;https://image.codepllz.com/uploads/2025/12/Qay7hVvTDEXB.webp&#34;&gt;&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Markdown 语法指南</title>
       <link>https://codepllz.com/posts/001/</link>
