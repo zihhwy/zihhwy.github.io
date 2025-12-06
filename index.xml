@@ -21,7 +21,11 @@
       <link>https://codepllz.com/posts/001/</link>
       <pubDate>Tue, 02 Dec 2025 10:41:59 +0800</pubDate>
       <guid>https://codepllz.com/posts/001/</guid>
-      <description>&lt;p&gt;  &lt;a href=&#34;https://www.markdownguide.org/&#34;&gt;&lt;em&gt;Markdown&lt;/em&gt;&lt;/a&gt; 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。本文旨在提供一份详尽的语法参考，助你快速掌握 Markdown。&lt;/p&gt;</description>
+      <description>&lt;p&gt;  &lt;a href=&#34;https://www.markdownguide.org/&#34;
+   
+    target=&#34;_blank&#34; rel=&#34;noopener&#34; &gt;
+   &lt;em&gt;Markdown&lt;/em&gt;
+&lt;/a&gt; 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。本文旨在提供一份详尽的语法参考，助你快速掌握 Markdown。&lt;/p&gt;</description>
     </item>
     <item>
       <title>如何把谷歌网盘当作s3存储桶用作各种网站</title>
